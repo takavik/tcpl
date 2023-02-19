@@ -367,3 +367,72 @@ void reverse(char s[], int len) {
     }
 }
 ```
+
+Exercise 1.20. Write a program that replaces tabs in the input with the proper number of blanks to space to the next tab stop. Assume a fixed set of tab stops, say every n columns. Should n be a variable or a symbolic parameter?
+```c
+#include <stdio.h>
+#define MAXLINE 1000
+#define TABSTP 11
+
+int get_line(char line[], int maxline);
+void detab(char s[], int len);
+
+int main() {
+    int len;
+    char line[MAXLINE];
+
+    while ((len = get_line(line, MAXLINE)) > 1) {
+	    detab(line, len);
+	    printf("%s", line);
+    }
+
+    return 0;
+}
+
+int get_line(char s[], int lim) {
+    int c, i;
+
+    for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
+	    s[i] = c;
+    }
+    if (c == '\n') {
+	    s[i] = c;
+	    ++i;
+    }
+    s[i] = '\0';
+    return i;
+}
+
+void detab(char s[], int len) {
+    int i = 0;
+    int nspc, nchar;
+
+    nspc = nchar = 0;
+    while (i < len) {
+    	if ((i+1) % TABSTP == 0) {
+            nspc = nchar = 0;
+    	}
+
+        if (s[i] == '\t') {
+            int n = TABSTP - nspc - nchar;
+            int end = (s[len-1] == '\n') ? len-2 : len-1;
+            for (int t = end; t >= i+n; t--) {
+    	        s[t] = s[t-n+1];
+            }
+            for (int j = i; j < i+n && j < end; j++) {
+    	        s[j] = ' ';
+            }
+            nspc = nchar = 0;
+            i += n;
+    	} else {
+            if (s[i] == ' ') {
+    	        nspc++;
+            } else {
+                nspc = 0;
+            }
+            nchar++;
+            i++;
+        }
+    }
+}
+```
