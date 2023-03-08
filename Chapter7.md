@@ -41,57 +41,51 @@ int main() {
 }
 ```
 
-lower.c
+Exercise 7-3. Revise ``miniprintf`` to handle more of the other facilities of ``printf``.
 ```c
-#include <stdio.h>
-#include <ctype.h>
-
-int main()  /* lower: convert input to lower case */
+void miniprintf(char *fmt, ...)
 {
-    int c;
+    va_list ap; /*  points  to  each  unnamed  arg  in  turn  */
+    char *p, *sval;
+    int ival;
+    unsigned int uval;
+    double dval;
 
-    while ((c = getchar()) != EOF)
-        putchar(tolower(c));
-    return 0;
-}
-```
-
-miniprintf.c
-```c
-#include <stdarg.h>
-
-/* minprintf:  minimal printf with variable argument list */
-void minprintf(char *fmt, ...)
-{
-    va_list ap;   /* points to each unnamed arg in turn */
-    char *p, *sval;
-    int ival;
-    double dval;
-
-    va_start(ap, fmt); /* make ap point to 1st unnamed arg */
-    for (p = fmt; *p; p++) {
-        if (*p != ′%′) {
-            putchar(*p);
-            continue;
-        }
-        switch (*++p) {
-        case ′d′:
-            ival = va_arg(ap, int);
-            printf("%d", ival);
-            break;
-        case ′f′:
-            dval = va_arg(ap, double);
-            printf("%f", dval);
-            break;
-        case ′s′:
-            for (sval = va_arg(ap, char *); *sval; sval++)
-                putchar(*sval);
-            break;
-        default:
-            putchar(*p);
-            break;
-        }
-    }
-    va_end(ap);   /* clean up when done */
+    va_start(ap, fmt); /*  make  ap  point  to  1st  unnamed  arg  */
+    for (p = fmt; *p; p++)
+    {
+        if (*p != '%')
+        {
+            putchar(*p);
+            continue;
+        }
+        switch (*++p)
+        {
+        case 'd':
+            ival = va_arg(ap, int);
+            printf("%d", ival);
+            break;
+        case 'f':
+            dval = va_arg(ap, double);
+            printf("%f", dval);
+            break;
+        case 's':
+            for (sval = va_arg(ap, char *); *sval; sval++)
+                putchar(*sval);
+            break;
+        case 'x':
+            uval = va_arg(ap, unsigned);
+            printf("%x", uval);
+            break;
+        case 'X':
+            uval = va_arg(ap, unsigned);
+            printf("%X", uval);
+            break;
+        default:
+            putchar(*p);
+            break;
+        }
+    }
+    va_end(ap); /*  clean  up  when  done  */
 }
 ```
