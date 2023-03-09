@@ -33,7 +33,9 @@ int main() {
         printf(fmt, c);
         if (c == '\n') {
             n = 0;
-        } else if (++n > MAX_LINE) {
+            continue;
+        } 
+        if (++n > MAX_LINE) {
             printf("\n");
             n = 0;
         }
